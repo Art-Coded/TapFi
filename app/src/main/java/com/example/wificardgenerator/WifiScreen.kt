@@ -1,17 +1,13 @@
 package com.example.wificardgenerator
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -21,8 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,17 +26,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wificardgenerator.ui.theme.Purple40
-import kotlinx.coroutines.launch
 import kotlin.math.max
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.ui.graphics.ColorFilter
+import com.example.wificardgenerator.ui.theme.dark_mode
 
 @Composable
-fun WifiScreen() {
+fun WifiScreen(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    onToggleTheme: (Boolean) -> Unit = {}
+) {
     val pageCount = 3
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { pageCount })
 
@@ -78,20 +75,46 @@ fun WifiScreen() {
             ) {
                 if (isVisible) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
+                        // App logo
                         Image(
                             painter = painterResource(id = R.drawable.ic_wifi3),
                             contentDescription = "App Logo",
-                            modifier = Modifier.height(42.dp)
+                            modifier = Modifier.height(42.dp),
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                         )
 
                         Spacer(modifier = Modifier.width(12.dp))
 
+                        // App name
                         Text(
                             text = "TapFi",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Image(
+                            painter = painterResource(
+                                id = if (isDarkTheme) R.drawable.dark_mode else R.drawable.light_mode
+                            ),
+                            contentDescription = "Theme Icon",
+                            modifier = Modifier
+                                .size(28.dp)
+                                .padding(end = 6.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Switch(
+                            checked = isDarkTheme,
+                            onCheckedChange = { onToggleTheme(it) },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = dark_mode
+                            )
                         )
                     }
 
@@ -167,9 +190,9 @@ fun CustomPagerIndicator(
 
             if (index < pageCount - 1) {
                 val lineProgress = when {
-                    currentPage > index -> 1f // fully filled
-                    currentPage == index -> max(0f, offsetFraction) // partial while dragging forward
-                    currentPage == index + 1 -> 1f - offsetFraction // partial while dragging back
+                    currentPage > index -> 1f
+                    currentPage == index -> max(0f, offsetFraction)
+                    currentPage == index + 1 -> 1f - offsetFraction
                     else -> 0f
                 }
 
@@ -179,13 +202,11 @@ fun CustomPagerIndicator(
                         .width(40.dp)
                         .padding(horizontal = 4.dp)
                 ) {
-                    // Base line
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.surfaceVariant)
                     )
-                    // Animated fill
                     Box(
                         modifier = Modifier
                             .fillMaxHeight()
