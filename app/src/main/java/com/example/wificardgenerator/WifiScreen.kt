@@ -32,8 +32,10 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.ColorFilter
 import com.example.wificardgenerator.ui.theme.dark_mode
+import kotlinx.coroutines.launch
 
 @Composable
 fun WifiScreen(
@@ -48,6 +50,13 @@ fun WifiScreen(
         R.drawable.ic_customize,
         R.drawable.ic_preview
     )
+
+    val coroutineScope = rememberCoroutineScope()
+    fun navigateToSlide(index: Int) {
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(index)
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         val currentPage = pagerState.currentPage
@@ -88,7 +97,6 @@ fun WifiScreen(
 
                         Spacer(modifier = Modifier.width(12.dp))
 
-                        // App name
                         Text(
                             text = "TapFi",
                             fontWeight = FontWeight.Bold,
@@ -137,10 +145,9 @@ fun WifiScreen(
             userScrollEnabled = true,
             modifier = Modifier
                 .fillMaxSize()
-                .weight(1f)
         ) { page ->
             when (page) {
-                0 -> SlideOne()
+                0 -> SlideOne(onNextClick = { navigateToSlide(1)})
                 1 -> SlideTwo()
                 2 -> SlideThree()
             }

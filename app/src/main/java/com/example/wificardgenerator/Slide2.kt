@@ -40,44 +40,24 @@ fun SlideTwo() {
             modifier = Modifier.padding(top = 12.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_wifi3),
+                painter = painterResource(id = R.drawable.ic_customize),
                 contentDescription = "WiFi Icon",
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(42.dp)
                     .padding(end = 8.dp, bottom = 8.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
             )
 
             Text(
-                text = "WiFi Card Generator",
+                text = "Customize your Card",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp
             )
         }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = "Create and share your WiFi credentials easily",
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp
-        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 👇 Fake content to test vertical scroll
-        repeat(30) { index ->
-            Text(
-                text = "Sample Item ${index + 1}",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-
-        Spacer(modifier = Modifier.height(100.dp)) // to make it more scrollable
     }
 }

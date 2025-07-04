@@ -1,7 +1,7 @@
 package com.example.wificardgenerator.Database
 
 import android.content.Context
-
+//DATASTORE
 class AppPreferences(context: Context) {
     private val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
