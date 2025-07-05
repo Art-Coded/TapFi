@@ -112,6 +112,10 @@ fun ColorPickerScreen(navController: NavController, sharedViewModel: SharedViewM
                     sharedViewModel.addColor(selectedColor)
                     navController.popBackStack()
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
