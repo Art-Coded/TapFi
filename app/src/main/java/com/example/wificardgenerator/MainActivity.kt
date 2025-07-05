@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("colorPicker") {
-                            ColorPickerScreen()
+                            ColorPickerScreen(navController = navController)
                         }
                     }
                 }
