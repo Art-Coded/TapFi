@@ -36,7 +36,7 @@ import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 @Composable
-fun ColorPickerScreen(navController: NavController, sharedViewModel: SharedViewModel) {
+fun SolidColorPickerScreen(navController: NavController, sharedViewModel: SharedViewModel) {
 
     val colorPickerController = rememberColorPickerController()
     var selectedColor by remember { mutableStateOf(Color.Red) }

@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("colorPicker") {
-                            ColorPickerScreen(navController = navController, sharedViewModel = sharedViewModel)
+                            SolidColorPickerScreen(navController = navController, sharedViewModel = sharedViewModel)
                         }
                     }
                 }

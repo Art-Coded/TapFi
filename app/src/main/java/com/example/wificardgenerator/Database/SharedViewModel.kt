@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModel
 
 class SharedViewModel : ViewModel() {
     private val _savedColors = mutableStateListOf<Color>()
-    val savedColors: List<Color> = _savedColors
+    val solidSavedColors: List<Color> = _savedColors
 
     fun addColor(color: Color) {
         _savedColors.add(color)
     }
+
 }

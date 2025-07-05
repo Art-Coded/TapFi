@@ -98,9 +98,9 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                     )
                 }
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(8.dp))
 
-                HorizontalScrollableColors(sharedViewModel.savedColors)
+                HorizontalScrollableColors(sharedViewModel.solidSavedColors)
             }
 
 
@@ -118,7 +118,7 @@ private fun HorizontalScrollableColors(colors: List<Color>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalScroll(scrollState),  // Makes the row scrollable
+            .horizontalScroll(scrollState),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Add some start padding for better UX
