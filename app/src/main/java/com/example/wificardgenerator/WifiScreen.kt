@@ -34,6 +34,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.ColorFilter
+import com.example.wificardgenerator.Database.SharedViewModel
 import com.example.wificardgenerator.ui.theme.dark_mode
 import kotlinx.coroutines.launch
 
@@ -41,7 +42,8 @@ import kotlinx.coroutines.launch
 fun WifiScreen(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     onToggleTheme: (Boolean) -> Unit = {},
-    colorPickerClick: () -> Unit
+    colorPickerClick: () -> Unit,
+    sharedViewModel: SharedViewModel
 ) {
     val pageCount = 3
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { pageCount })
@@ -149,7 +151,7 @@ fun WifiScreen(
         ) { page ->
             when (page) {
                 0 -> SlideOne(onNextClick = { navigateToSlide(1)})
-                1 -> SlideTwo(colorPickerClick = { colorPickerClick() })
+                1 -> SlideTwo(colorPickerClick = { colorPickerClick() }, sharedViewModel = sharedViewModel)
                 2 -> SlideThree()
             }
         }

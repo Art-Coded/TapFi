@@ -1,10 +1,13 @@
 package com.example.wificardgenerator
 
+import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,12 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.wificardgenerator.Database.SharedViewModel
 
 @Composable
-fun SlideTwo(colorPickerClick: () -> Unit) {
+fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
     val scrollState = rememberScrollState()
-    var selectedColor by remember { mutableStateOf(Color.Red) }
 
     Column(
         modifier = Modifier
@@ -76,9 +79,6 @@ fun SlideTwo(colorPickerClick: () -> Unit) {
             )
 
             Row {
-
-                Spacer(modifier = Modifier.width(10.dp))
-
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -98,11 +98,7 @@ fun SlideTwo(colorPickerClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(selectedColor, shape = MaterialTheme.shapes.small)
-                )
+                HorizontalScrollableColors(sharedViewModel.savedColors)
             }
 
 
@@ -110,5 +106,39 @@ fun SlideTwo(colorPickerClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
+    }
+}
+
+@Composable
+private fun HorizontalScrollableColors(colors: List<Color>) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        val scrollState = rememberScrollState()
+
+        // Fading edges
+        HorizontalScrollbar(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
+            adapter = rememberScrollbarAdapter(scrollState)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Spacer(modifier = Modifier.width(4.dp))
+
+            colors.forEach { color ->
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(color, shape = MaterialTheme.shapes.small)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(4.dp))
+        }
     }
 }

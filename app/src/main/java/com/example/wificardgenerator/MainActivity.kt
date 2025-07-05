@@ -23,11 +23,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.wificardgenerator.Database.AppPreferences
+import com.example.wificardgenerator.Database.SharedViewModel
 import com.example.wificardgenerator.ui.theme.WifiCardGeneratorTheme
 
 class MainActivity : ComponentActivity() {
@@ -56,6 +58,7 @@ class MainActivity : ComponentActivity() {
                 darkTheme = isDarkTheme,
                 dynamicColor = false
             ) {
+                val sharedViewModel: SharedViewModel = viewModel()
                 val navController = rememberNavController()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -73,12 +76,13 @@ class MainActivity : ComponentActivity() {
                                     isDarkTheme = newValue
                                     preferences.saveDarkTheme(newValue)
                                 },
-                                colorPickerClick = { navController.navigate("colorpicker") }
+                                colorPickerClick = { navController.navigate("colorpicker") },
+                                sharedViewModel = sharedViewModel
                             )
                         }
 
                         composable("colorPicker") {
-                            ColorPickerScreen(navController = navController)
+                            ColorPickerScreen(navController = navController, sharedViewModel = sharedViewModel)
                         }
                     }
                 }

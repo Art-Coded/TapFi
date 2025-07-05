@@ -29,13 +29,14 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.wificardgenerator.Database.SharedViewModel
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 @Composable
-fun ColorPickerScreen(navController: NavController) {
+fun ColorPickerScreen(navController: NavController, sharedViewModel: SharedViewModel) {
 
     val colorPickerController = rememberColorPickerController()
     var selectedColor by remember { mutableStateOf(Color.Red) }
@@ -108,17 +109,14 @@ fun ColorPickerScreen(navController: NavController) {
 
             Button(
                 onClick = {
-
+                    sharedViewModel.addColor(selectedColor)
+                    navController.popBackStack()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    .padding(16.dp)
             ) {
-                Text("Save Color", style = MaterialTheme.typography.labelLarge)
+                Text("Save Color")
             }
         }
 
