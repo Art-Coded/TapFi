@@ -1,13 +1,11 @@
 package com.example.wificardgenerator
 
-import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +33,6 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // Header
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(top = 4.dp)
@@ -78,6 +75,11 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
+            Text(
+                text = "Solid colors",
+                style = MaterialTheme.typography.bodySmall
+            )
+
             Row {
                 Box(
                     modifier = Modifier
@@ -111,34 +113,26 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
 @Composable
 private fun HorizontalScrollableColors(colors: List<Color>) {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        val scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
 
-        // Fading edges
-        HorizontalScrollbar(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            adapter = rememberScrollbarAdapter(scrollState)
-        )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState),  // Makes the row scrollable
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // Add some start padding for better UX
+        Spacer(modifier = Modifier.width(4.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(scrollState),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(4.dp))
-
-            colors.forEach { color ->
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(color, shape = MaterialTheme.shapes.small)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(4.dp))
+        colors.forEach { color ->
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(color, shape = MaterialTheme.shapes.small)
+            )
         }
+
+        // Add some end padding for better UX
+        Spacer(modifier = Modifier.width(4.dp))
     }
 }

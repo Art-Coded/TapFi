@@ -127,10 +127,6 @@ fun SlideOne(onNextClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f),
-                    shape = MaterialTheme.shapes.medium
-                )
                 .padding(16.dp),
         ) {
             Text(

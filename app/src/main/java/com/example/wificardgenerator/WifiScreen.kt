@@ -57,7 +57,10 @@ fun WifiScreen(
     val coroutineScope = rememberCoroutineScope()
     fun navigateToSlide(index: Int) {
         coroutineScope.launch {
-            pagerState.animateScrollToPage(index)
+            pagerState.animateScrollToPage(
+                page = index,
+                animationSpec = tween(durationMillis = 500)
+            )
         }
     }
 
@@ -68,12 +71,12 @@ fun WifiScreen(
             targetState = currentPage == 0,
             transitionSpec = {
                 if (targetState) {
-                    (fadeIn(tween(150)) + slideInVertically { -it / 2 }).togetherWith(
-                        fadeOut(tween(150)) + slideOutVertically { it / 2 }
+                    (fadeIn(tween(250)) + slideInVertically { -it / 2 }).togetherWith(
+                        fadeOut(tween(250)) + slideOutVertically { it / 2 }
                     )
                 } else {
-                    (fadeIn(tween(150)) + slideInVertically { it / 2 }).togetherWith(
-                        fadeOut(tween(150)) + slideOutVertically { -it / 2 }
+                    (fadeIn(tween(250)) + slideInVertically { it / 2 }).togetherWith(
+                        fadeOut(tween(250)) + slideOutVertically { -it / 2 }
                     )
                 }.using(SizeTransform(clip = false))
             },
