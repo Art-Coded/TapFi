@@ -40,7 +40,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun WifiScreen(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    onToggleTheme: (Boolean) -> Unit = {}
+    onToggleTheme: (Boolean) -> Unit = {},
+    colorPickerClick: () -> Unit
 ) {
     val pageCount = 3
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { pageCount })
@@ -121,7 +122,7 @@ fun WifiScreen(
                             checked = isDarkTheme,
                             onCheckedChange = { onToggleTheme(it) },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = dark_mode
+                                checkedThumbColor = Color.White
                             )
                         )
                     }
@@ -148,7 +149,7 @@ fun WifiScreen(
         ) { page ->
             when (page) {
                 0 -> SlideOne(onNextClick = { navigateToSlide(1)})
-                1 -> SlideTwo()
+                1 -> SlideTwo(colorPickerClick = { colorPickerClick() })
                 2 -> SlideThree()
             }
         }
@@ -177,7 +178,7 @@ fun CustomPagerIndicator(
                     .clip(CircleShape)
                     .background(
                         if (index <= currentPage)
-                            Purple40
+                            MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     ),

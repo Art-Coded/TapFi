@@ -289,7 +289,7 @@ fun SlideOne(onNextClick: () -> Unit) {
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = dark_mode,
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White
             ),
             modifier = Modifier

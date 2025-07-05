@@ -15,3 +15,6 @@ val calm_white = Color(0xFFDEF4F6)
 val grey = Color(0xFF2d3733)
 
 val dark_mode = Color (0xFF5a53ac)
+
+val primary_light = Color (0xFF3B82F6)
+val primary_dark = Color (0xFF3B82F6)

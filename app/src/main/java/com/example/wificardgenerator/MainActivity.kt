@@ -62,17 +62,22 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = "main",
                         modifier = Modifier.padding(innerPadding),
-                        enterTransition = { fadeIn(animationSpec = tween(200)) },
-                        exitTransition = { fadeOut(animationSpec = tween(200)) }
+                        enterTransition = { fadeIn(animationSpec = tween(300)) },
+                        exitTransition = { fadeOut(animationSpec = tween(300)) }
                     ) {
-                        composable("main") {
+                        composable("main")  {
                             WifiScreen(
                                 isDarkTheme = isDarkTheme,
                                 onToggleTheme = { newValue ->
                                     isDarkTheme = newValue
                                     preferences.saveDarkTheme(newValue)
-                                }
+                                },
+                                colorPickerClick = { navController.navigate("colorpicker") }
                             )
+                        }
+
+                        composable("colorPicker") {
+                            ColorPickerScreen()
                         }
                     }
                 }
