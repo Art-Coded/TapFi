@@ -27,6 +27,13 @@ class SharedViewModel : ViewModel() {
     private val _isGradient = MutableStateFlow(false)
     val isGradient: StateFlow<Boolean> = _isGradient.asStateFlow()
 
+    // For WiFi details
+    private val _networkName = MutableStateFlow("")
+    val networkName: StateFlow<String> = _networkName.asStateFlow()
+
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password.asStateFlow()
+
     fun addColor(color: Color) {
         _savedColors.add(0, color)
     }
@@ -39,5 +46,13 @@ class SharedViewModel : ViewModel() {
     fun setCardGradient(gradient: GradientColor) {
         _cardGradient.value = gradient
         _isGradient.value = true
+    }
+
+    fun setNetworkName(name: String) {
+        _networkName.value = name
+    }
+
+    fun setPassword(pwd: String) {
+        _password.value = pwd
     }
 }

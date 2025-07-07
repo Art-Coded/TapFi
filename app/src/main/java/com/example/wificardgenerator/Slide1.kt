@@ -22,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,15 +43,23 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.wificardgenerator.Database.SharedViewModel
 import com.example.wificardgenerator.ui.theme.dark_mode
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 @Composable
-fun SlideOne(onNextClick: () -> Unit) {
+fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) {
 
     val scrollState = rememberScrollState()
 
-    var networkName by remember { mutableStateOf("") }
-    var passwordName by remember { mutableStateOf("") }
+    // Get values from ViewModel
+    val networkNameState by viewModel.networkName.collectAsState()
+    val passwordState by viewModel.password.collectAsState()
+
+    // Local state for error handling and UI updates
+    var networkName by remember { mutableStateOf(networkNameState) }
+    var passwordName by remember { mutableStateOf(passwordState) }
     var currentError by remember { mutableStateOf("") }
 
     var networkNameError by remember { mutableStateOf(false) }
@@ -76,6 +86,15 @@ fun SlideOne(onNextClick: () -> Unit) {
                 true
             }
         }
+    }
+
+    // Update ViewModel when values change
+    LaunchedEffect(networkName) {
+        viewModel.setNetworkName(networkName)
+    }
+
+    LaunchedEffect(passwordName) {
+        viewModel.setPassword(passwordName)
     }
 
     Column(
