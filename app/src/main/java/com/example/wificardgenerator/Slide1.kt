@@ -44,18 +44,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wificardgenerator.Database.SharedViewModel
-import com.example.wificardgenerator.ui.theme.dark_mode
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @Composable
-fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) {
+fun SlideOne(onNextClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
     val scrollState = rememberScrollState()
 
     // Get values from ViewModel
-    val networkNameState by viewModel.networkName.collectAsState()
-    val passwordState by viewModel.password.collectAsState()
+    val networkNameState by sharedViewModel.networkName.collectAsState()
+    val passwordState by sharedViewModel.password.collectAsState()
 
     // Local state for error handling and UI updates
     var networkName by remember { mutableStateOf(networkNameState) }
@@ -69,7 +67,8 @@ fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) 
     val lastNameFocusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val maxLength = 40
+    val networkMaxLength = 20
+    val passwordMaxLength = 30
 
     fun validateFields(): Boolean {
         return when {
@@ -90,11 +89,11 @@ fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) 
 
     // Update ViewModel when values change
     LaunchedEffect(networkName) {
-        viewModel.setNetworkName(networkName)
+        sharedViewModel.setNetworkName(networkName)
     }
 
     LaunchedEffect(passwordName) {
-        viewModel.setPassword(passwordName)
+        sharedViewModel.setPassword(passwordName)
     }
 
     Column(
@@ -175,7 +174,7 @@ fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) 
                 OutlinedTextField(
                     value = networkName,
                     onValueChange = {
-                        if (it.length <= maxLength) {
+                        if (it.length <= networkMaxLength) {
                             networkName = it
                             networkNameError = false
                         }
@@ -201,7 +200,7 @@ fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) 
                 )
 
                 Text(
-                    text = "${networkName.length} / $maxLength",
+                    text = "${networkName.length} / $networkMaxLength",
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = 16.dp),
@@ -230,7 +229,7 @@ fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) 
                 OutlinedTextField(
                     value = passwordName,
                     onValueChange = {
-                        if (it.length <= maxLength) {
+                        if (it.length <= passwordMaxLength) {
                             passwordName = it
                             passwordNameError = false
                         }
@@ -257,7 +256,7 @@ fun SlideOne(onNextClick: () -> Unit, viewModel: SharedViewModel = viewModel()) 
                 )
 
                 Text(
-                    text = "${passwordName.length} / $maxLength",
+                    text = "${passwordName.length} / $passwordMaxLength",
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = 16.dp),

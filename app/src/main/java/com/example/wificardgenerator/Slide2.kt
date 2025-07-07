@@ -89,7 +89,6 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
             )
 
             Box(
-                //THIS BOX
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
@@ -111,8 +110,94 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                                 shape = MaterialTheme.shapes.medium
                             )
                         }
-                    )
-            )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                // Get network name and password from ViewModel
+                val networkName by sharedViewModel.networkName.collectAsState()
+                val password by sharedViewModel.password.collectAsState()
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.CenterEnd // Align Column to center-right
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        // Label: Network Name
+                        Text(
+                            text = "Network Name (SSID)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White.copy(alpha = 0.7f),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                        )
+
+                        // For network name
+                        val networkFontSize = when {
+                            networkName.length <= 10 -> 22.sp
+                            networkName.length <= 14 -> 16.sp
+                            networkName.length <= 16 -> 14.sp
+                            else -> 14.sp
+                        }
+
+                        // Network Name Text
+                        Text(
+                            text = networkName,
+                            fontSize = networkFontSize,
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        if (password.isNotBlank()) {
+                            // Label: Password
+                            Text(
+                                text = "Password",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White.copy(alpha = 0.7f),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                            )
+
+                            val passwordFontSize = when {
+                                password.length <= 12 -> 15.sp
+                                password.length <= 20 -> 11.sp
+                                password.length <= 24 -> 7.sp
+                                else -> 14.sp
+                            }
+
+                            // Password Text
+                            Text(
+                                text = password,
+                                fontSize = passwordFontSize,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.White.copy(alpha = 0.9f),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                        } else {
+                            // Free WiFi message if no password
+                            Text(
+                                text = "no password required, free Wifi!",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White.copy(alpha = 0.9f),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+
+
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

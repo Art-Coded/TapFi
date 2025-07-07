@@ -153,7 +153,7 @@ fun WifiScreen(
                 .fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> SlideOne(onNextClick = { navigateToSlide(1)})
+                0 -> SlideOne(onNextClick = { navigateToSlide(1)}, sharedViewModel = sharedViewModel)
                 1 -> SlideTwo(colorPickerClick = { colorPickerClick() }, sharedViewModel = sharedViewModel)
                 2 -> SlideThree()
             }
