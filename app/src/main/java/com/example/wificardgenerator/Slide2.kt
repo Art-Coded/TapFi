@@ -88,6 +88,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
+            //THIS BOX
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

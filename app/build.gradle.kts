@@ -61,5 +61,5 @@ dependencies {
 
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
 
-    implementation ("com.google.zxing:core:3.5.2")
+    implementation ("com.google.zxing:core:3.5.1")
 }

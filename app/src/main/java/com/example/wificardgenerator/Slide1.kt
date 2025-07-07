@@ -87,15 +87,6 @@ fun SlideOne(onNextClick: () -> Unit, sharedViewModel: SharedViewModel) {
         }
     }
 
-    // Update ViewModel when values change
-    LaunchedEffect(networkName) {
-        sharedViewModel.setNetworkName(networkName)
-    }
-
-    LaunchedEffect(passwordName) {
-        sharedViewModel.setPassword(passwordName)
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -299,6 +290,8 @@ fun SlideOne(onNextClick: () -> Unit, sharedViewModel: SharedViewModel) {
         Button(
             onClick = {
                 if (validateFields()) {
+                    sharedViewModel.setNetworkName(networkName)
+                    sharedViewModel.setPassword(passwordName)
                     onNextClick()
                 }
             },
@@ -313,6 +306,7 @@ fun SlideOne(onNextClick: () -> Unit, sharedViewModel: SharedViewModel) {
         ) {
             Text(text = "Next")
         }
+
 
         Spacer(modifier = Modifier.height(50.dp))
     }
