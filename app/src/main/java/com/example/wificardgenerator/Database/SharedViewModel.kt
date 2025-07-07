@@ -1,17 +1,43 @@
 package com.example.wificardgenerator.Database
 
-// SharedViewModel.kt
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.wificardgenerator.GradientColor
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class SharedViewModel : ViewModel() {
     private val _savedColors = mutableStateListOf<Color>()
     val solidSavedColors: List<Color> = _savedColors
 
+    // For solid color
+    private val _cardColor = MutableStateFlow<Color?>(null)
+    val cardColor: StateFlow<Color?> = _cardColor.asStateFlow()
+
+    // For gradient
+    private val _cardGradient = MutableStateFlow<GradientColor?>(null)
+    val cardGradient: StateFlow<GradientColor?> = _cardGradient.asStateFlow()
+
+    // To track if current selection is gradient
+    private val _isGradient = MutableStateFlow(false)
+    val isGradient: StateFlow<Boolean> = _isGradient.asStateFlow()
+
     fun addColor(color: Color) {
-        _savedColors.add(color)
+        _savedColors.add(0, color)
     }
 
+    fun setCardColor(color: Color) {
+        _cardColor.value = color
+        _isGradient.value = false
+    }
+
+    fun setCardGradient(gradient: GradientColor) {
+        _cardGradient.value = gradient
+        _isGradient.value = true
+    }
 }

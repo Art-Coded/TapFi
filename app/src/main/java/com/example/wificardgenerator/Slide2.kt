@@ -6,12 +6,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -21,8 +24,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wificardgenerator.Database.SharedViewModel
 
+data class GradientColor(
+    val start: Color,
+    val end: Color,
+    val name: String
+)
+
 @Composable
 fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
+
+    val currentCardColor by sharedViewModel.cardColor.collectAsState()
+    val currentCardGradient by sharedViewModel.cardGradient.collectAsState()
+    val isGradient by sharedViewModel.isGradient.collectAsState()
 
     val scrollState = rememberScrollState()
 
@@ -32,7 +45,6 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(top = 4.dp)
@@ -70,6 +82,39 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
         ) {
 
             Text(
+                text = "Preview",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .then(
+                        if (isGradient) {
+                            Modifier.background(
+                                brush = Brush.horizontalGradient(
+                                    colors = listOf(
+                                        currentCardGradient?.start ?: Color.Blue,
+                                        currentCardGradient?.end ?: Color.Cyan
+                                    )
+                                ),
+                                shape = MaterialTheme.shapes.medium
+                            )
+                        } else {
+                            Modifier.background(
+                                color = currentCardColor ?: MaterialTheme.colorScheme.primary,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                        }
+                    )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
                 text = "Pick your card color",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -77,7 +122,8 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
             Text(
                 text = "Solid colors",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
 
             Row {
@@ -100,19 +146,143 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                HorizontalScrollableColors(sharedViewModel.solidSavedColors)
+                val presetSolidColors = remember {
+                    listOf(
+                        Color(0xFFF44336), // Red
+                        Color(0xFFE91E63), // Pink
+                        Color(0xFF9C27B0), // Purple
+                        Color(0xFF673AB7), // Deep Purple
+                        Color(0xFF3F51B5), // Indigo
+                        Color(0xFF2196F3), // Blue
+                        Color(0xFF00BCD4), // Cyan
+                        Color(0xFF4CAF50)  // Green
+                    )
+                }
+
+                HorizontalScrollableColors(
+                    colors = sharedViewModel.solidSavedColors + presetSolidColors,
+                    onColorSelected = { color ->
+                        sharedViewModel.setCardColor(color)
+                    }
+                )
             }
 
+            Spacer(modifier = Modifier.height(14.dp))
 
+            Text(
+                text = "Gradient colors",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+
+            Row {
+                val gradientColors = remember {
+                    listOf(
+                        GradientColor(
+                            start = Color(0xFFF6D242),
+                            end = Color(0xFFFF52E5),
+                            name = "Sunset"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF2193B0),
+                            end = Color(0xFF6DD5ED),
+                            name = "Ocean"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFF857A6),
+                            end = Color(0xFFFF5858),
+                            name = "Pinky"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFA8FF78),
+                            end = Color(0xFF78FFD6),
+                            name = "Mint"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFDA22FF),
+                            end = Color(0xFF9733EE),
+                            name = "Purple"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFFF512F),
+                            end = Color(0xFFDD2476),
+                            name = "Bloody"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF1A2980),
+                            end = Color(0xFF26D0CE),
+                            name = "Aqua"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFFF8008),
+                            end = Color(0xFFFFC837),
+                            name = "Sunshine"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF4776E6),
+                            end = Color(0xFF8E54E9),
+                            name = "Royal"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF114357),
+                            end = Color(0xFFF29492),
+                            name = "Wine"
+                        )
+                    )
+                }
+
+                HorizontalScrollableGradients(
+                    gradients = gradientColors,
+                    onGradientSelected = { gradient ->
+                        sharedViewModel.setCardGradient(gradient)
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "OR",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .height(48.dp)
+                    .clip(CircleShape)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .clickable { /* Handle photo selection */ },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Add a Photo Background",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Medium
+                )
+            }
         }
-
         Spacer(modifier = Modifier.height(24.dp))
-
     }
 }
 
 @Composable
-private fun HorizontalScrollableColors(colors: List<Color>) {
+private fun HorizontalScrollableColors(
+    colors: List<Color>,
+    onColorSelected: (Color) -> Unit
+) {
     val scrollState = rememberScrollState()
 
     Row(
@@ -121,18 +291,51 @@ private fun HorizontalScrollableColors(colors: List<Color>) {
             .horizontalScroll(scrollState),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Add some start padding for better UX
         Spacer(modifier = Modifier.width(4.dp))
 
         colors.forEach { color ->
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(color, shape = MaterialTheme.shapes.small)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(color)
+                    .clickable { onColorSelected(color) }
             )
         }
 
-        // Add some end padding for better UX
+        Spacer(modifier = Modifier.width(4.dp))
+    }
+}
+
+@Composable
+private fun HorizontalScrollableGradients(
+    gradients: List<GradientColor>,
+    onGradientSelected: (GradientColor) -> Unit
+) {
+    val scrollState = rememberScrollState()
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Spacer(modifier = Modifier.width(4.dp))
+
+        gradients.forEach { gradient ->
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(gradient.start, gradient.end)
+                        )
+                    )
+                    .clickable { onGradientSelected(gradient) }
+            )
+        }
+
         Spacer(modifier = Modifier.width(4.dp))
     }
 }
