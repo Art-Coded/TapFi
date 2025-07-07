@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -114,14 +115,32 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                // Get network name and password from ViewModel
                 val networkName by sharedViewModel.networkName.collectAsState()
                 val password by sharedViewModel.password.collectAsState()
+
+                // Generate QR code bitmap
+                val qrCodeBitmap by remember(networkName, password) {
+                    derivedStateOf {
+                        QRCodeGenerator.generateWifiQRCode(networkName, password)
+                    }
+                }
+
+                // QR code in top-left corner - REMOVE THE COLOR FILTER
+                if (qrCodeBitmap != null) {
+                    Image(
+                        bitmap = qrCodeBitmap!!.asImageBitmap(),
+                        contentDescription = "WiFi QR Code",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .padding(start = 24.dp)
+                            .align(Alignment.CenterStart)
+                    )
+                }
 
                 Box(
                     modifier = Modifier
                         .fillMaxSize(),
-                    contentAlignment = Alignment.CenterEnd // Align Column to center-right
+                    contentAlignment = Alignment.CenterEnd
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -136,7 +155,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
                         )
 
-                        // For network name
+                        // Network Name Text with dynamic font size
                         val networkFontSize = when {
                             networkName.length <= 10 -> 22.sp
                             networkName.length <= 14 -> 16.sp
@@ -144,7 +163,6 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             else -> 14.sp
                         }
 
-                        // Network Name Text
                         Text(
                             text = networkName,
                             fontSize = networkFontSize,
@@ -196,8 +214,6 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                         }
                     }
                 }
-
-
             }
 
             Spacer(modifier = Modifier.height(16.dp))
