@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -125,42 +126,58 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                     }
                 }
 
-                // QR code in top-left corner - REMOVE THE COLOR FILTER
-                if (qrCodeBitmap != null) {
-                    Image(
-                        bitmap = qrCodeBitmap!!.asImageBitmap(),
-                        contentDescription = "WiFi QR Code",
-                        modifier = Modifier
-                            .size(120.dp)
-                            .padding(start = 24.dp)
-                            .align(Alignment.CenterStart)
-                    )
-                }
-
-                Box(
+                // Use Row for two-column layout
+                Row(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.CenterEnd
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Column 1: QR Code (Left Side)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        if (qrCodeBitmap != null) {
+                            Image(
+                                bitmap = qrCodeBitmap!!.asImageBitmap(),
+                                contentDescription = "WiFi QR Code",
+                                modifier = Modifier.size(120.dp)
+                            )
+                        } else {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(100.dp)
+                            )
+                        }
+                    }
+
+                    // Column 2: Network Info (Right Side)
                     Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        // Label: Network Name
+                        // Network Name Label
                         Text(
                             text = "Network Name (SSID)",
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.White.copy(alpha = 0.7f),
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
 
-                        // Network Name Text with dynamic font size
+                        // Dynamic Network Name Text Size
                         val networkFontSize = when {
                             networkName.length <= 10 -> 22.sp
-                            networkName.length <= 14 -> 16.sp
-                            networkName.length <= 16 -> 14.sp
-                            else -> 14.sp
+                            networkName.length <= 14 -> 18.sp
+                            networkName.length <= 20 -> 16.sp
+                            networkName.length <= 26 -> 14.sp
+                            else -> 12.sp
                         }
 
                         Text(
@@ -170,45 +187,44 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            lineHeight = 16.sp
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         if (password.isNotBlank()) {
-                            // Label: Password
                             Text(
                                 text = "Password",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.White.copy(alpha = 0.7f),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                                modifier = Modifier.padding(bottom = 4.dp)
                             )
 
                             val passwordFontSize = when {
-                                password.length <= 12 -> 15.sp
-                                password.length <= 20 -> 11.sp
-                                password.length <= 24 -> 7.sp
-                                else -> 14.sp
+                                password.length <= 12 -> 16.sp
+                                password.length <= 20 -> 12.sp
+                                else -> 12.sp
                             }
 
-                            // Password Text
                             Text(
                                 text = password,
                                 fontSize = passwordFontSize,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White.copy(alpha = 0.9f),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                                lineHeight = 13.sp
                             )
                         } else {
-                            // Free WiFi message if no password
+
                             Text(
-                                text = "no password required, free Wifi!",
+                                text = "No password required, free Wifi!",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = Color.White.copy(alpha = 0.9f),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                                modifier = Modifier.padding(top = 8.dp),
                                 fontWeight = FontWeight.Bold
                             )
                         }
