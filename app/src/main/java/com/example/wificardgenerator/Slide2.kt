@@ -347,6 +347,56 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             start = Color(0xFF114357),
                             end = Color(0xFFF29492),
                             name = "Wine"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF43CEA2),
+                            end = Color(0xFF185A9D),
+                            name = "Turquoise"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF00C9FF),
+                            end = Color(0xFF92FE9D),
+                            name = "Sky Mint"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF3CA55C),
+                            end = Color(0xFFB5AC49),
+                            name = "Lime Forest"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFFF5F6D),
+                            end = Color(0xFFFFC371),
+                            name = "Coral"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF654EA3),
+                            end = Color(0xFFEAAFC8),
+                            name = "Lavender"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF009FFF),
+                            end = Color(0xFFEC2F4B),
+                            name = "Fire Ice"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFFC5C7D),
+                            end = Color(0xFF6A82FB),
+                            name = "Peachberry"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF12C2E9),
+                            end = Color(0xFFC471ED),
+                            name = "Blueberry"
+                        ),
+                        GradientColor(
+                            start = Color(0xFFFF6CAB),
+                            end = Color(0xFF7366FF),
+                            name = "Candy"
+                        ),
+                        GradientColor(
+                            start = Color(0xFF00F260),
+                            end = Color(0xFF0575E6),
+                            name = "Fresh Leaf"
                         )
                     )
                 }
