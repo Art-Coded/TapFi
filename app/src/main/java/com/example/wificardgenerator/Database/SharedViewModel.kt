@@ -1,15 +1,18 @@
 package com.example.wificardgenerator.Database
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.wificardgenerator.GradientColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class SharedViewModel : ViewModel() {
     private val _savedColors = mutableStateListOf<Color>()
@@ -63,5 +66,22 @@ class SharedViewModel : ViewModel() {
 
     fun setPassword(pwd: String) {
         _password.value = pwd
+    }
+
+
+
+    private val _backgroundImage = MutableStateFlow<Bitmap?>(null)
+    val backgroundImage = _backgroundImage.asStateFlow()
+
+    fun setBackgroundImage(bitmap: Bitmap) {
+        viewModelScope.launch {
+            _backgroundImage.value = bitmap
+        }
+    }
+
+    fun clearBackgroundImage() {
+        viewModelScope.launch {
+            _backgroundImage.value = null
+        }
     }
 }

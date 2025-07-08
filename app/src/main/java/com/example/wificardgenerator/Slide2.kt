@@ -1,5 +1,9 @@
 package com.example.wificardgenerator
 
+import android.graphics.Bitmap
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +25,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,14 +41,41 @@ data class GradientColor(
 )
 
 @Composable
-fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
+fun SlideTwo(
+    colorPickerClick: () -> Unit,
+    sharedViewModel: SharedViewModel,
+    onImageSelected: (Bitmap) -> Unit = { }
+) {
 
     val currentCardColor by sharedViewModel.cardColor.collectAsState()
     val currentCardGradient by sharedViewModel.cardGradient.collectAsState()
     val isGradient by sharedViewModel.isGradient.collectAsState()
     val currentTextColor by sharedViewModel.textColor.collectAsState()
 
+    val networkName by sharedViewModel.networkName.collectAsState()
+    val password by sharedViewModel.password.collectAsState()
+
+    // Generate QR code bitmap
+    val qrCodeBitmap by remember(networkName, password) {
+        derivedStateOf {
+            QRCodeGenerator.generateWifiQRCode(networkName, password)
+        }
+    }
+
     val scrollState = rememberScrollState()
+
+    val context = LocalContext.current
+    val backgroundImage by sharedViewModel.backgroundImage.collectAsState()
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            uri?.let {
+                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+                sharedViewModel.setBackgroundImage(bitmap)
+            }
+        }
+    )
 
     Column(
         modifier = Modifier
@@ -96,10 +129,24 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .then(
-                        if (isGradient) {
-                            Modifier.background(
+                    .clip(MaterialTheme.shapes.medium),
+                contentAlignment = Alignment.Center
+            ) {
+                // Background layer
+                if (backgroundImage != null) {
+                    Image(
+                        bitmap = backgroundImage!!.asImageBitmap(),
+                        contentDescription = "Card Background",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(MaterialTheme.shapes.medium),
+                        contentScale = ContentScale.Crop
+                    )
+                } else if (isGradient) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
                                 brush = Brush.horizontalGradient(
                                     colors = listOf(
                                         currentCardGradient?.start ?: Color.Blue,
@@ -108,26 +155,19 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                                 ),
                                 shape = MaterialTheme.shapes.medium
                             )
-                        } else {
-                            Modifier.background(
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
                                 color = currentCardColor ?: MaterialTheme.colorScheme.primary,
                                 shape = MaterialTheme.shapes.medium
                             )
-                        }
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                val networkName by sharedViewModel.networkName.collectAsState()
-                val password by sharedViewModel.password.collectAsState()
-
-                // Generate QR code bitmap
-                val qrCodeBitmap by remember(networkName, password) {
-                    derivedStateOf {
-                        QRCodeGenerator.generateWifiQRCode(networkName, password)
-                    }
+                    )
                 }
 
-                // Use Row for two-column layout
+                // Content layer (your existing QR code and network info)
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -141,7 +181,6 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             .fillMaxHeight(),
                         contentAlignment = Alignment.Center
                     ) {
-
                         if (qrCodeBitmap != null) {
                             Image(
                                 bitmap = qrCodeBitmap!!.asImageBitmap(),
@@ -221,7 +260,6 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                                 lineHeight = 13.sp
                             )
                         } else {
-
                             Text(
                                 text = "No password required, free Wifi!",
                                 style = MaterialTheme.typography.bodyMedium,
@@ -440,7 +478,9 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                         shape = MaterialTheme.shapes.medium
                     )
-                    .clickable { /* Handle photo selection */ },
+                    .clickable {
+                        galleryLauncher.launch("image/*")
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
