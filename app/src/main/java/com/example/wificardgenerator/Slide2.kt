@@ -43,8 +43,7 @@ data class GradientColor(
 @Composable
 fun SlideTwo(
     colorPickerClick: () -> Unit,
-    sharedViewModel: SharedViewModel,
-    onImageSelected: (Bitmap) -> Unit = { }
+    sharedViewModel: SharedViewModel
 ) {
 
     val currentCardColor by sharedViewModel.cardColor.collectAsState()
@@ -55,7 +54,6 @@ fun SlideTwo(
     val networkName by sharedViewModel.networkName.collectAsState()
     val password by sharedViewModel.password.collectAsState()
 
-    // Generate QR code bitmap
     val qrCodeBitmap by remember(networkName, password) {
         derivedStateOf {
             QRCodeGenerator.generateWifiQRCode(networkName, password)
@@ -76,6 +74,8 @@ fun SlideTwo(
             }
         }
     )
+
+    val backgroundType by sharedViewModel.backgroundType.collectAsState()
 
     Column(
         modifier = Modifier
@@ -324,7 +324,7 @@ fun SlideTwo(
 
                 HorizontalScrollableColors(
                     colors = sharedViewModel.solidSavedColors + presetSolidColors,
-                    selectedColor = if (!isGradient) currentCardColor else null,
+                    selectedColor = if (!isGradient && backgroundType == BackgroundType.COLOR) currentCardColor else null,
                     onColorSelected = { color ->
                         sharedViewModel.setCardColor(color)
                     }
@@ -447,7 +447,7 @@ fun SlideTwo(
 
                 HorizontalScrollableGradients(
                     gradients = gradientColors,
-                    selectedGradient = if (isGradient) currentCardGradient else null,
+                    selectedGradient = if (backgroundType == BackgroundType.GRADIENT) currentCardGradient else null,
                     onGradientSelected = { gradient ->
                         sharedViewModel.setCardGradient(gradient)
                     }
@@ -476,7 +476,6 @@ fun SlideTwo(
                     .clip(CircleShape)
                     .background(
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                        shape = MaterialTheme.shapes.medium
                     )
                     .clickable {
                         galleryLauncher.launch("image/*")
