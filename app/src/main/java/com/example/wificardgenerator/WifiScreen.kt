@@ -148,7 +148,7 @@ fun WifiScreen(
 
         HorizontalPager(
             state = pagerState,
-            userScrollEnabled = true,
+            userScrollEnabled = false,
             modifier = Modifier
                 .fillMaxSize()
         ) { page ->

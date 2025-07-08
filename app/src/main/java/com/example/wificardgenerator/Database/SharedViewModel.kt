@@ -16,8 +16,12 @@ class SharedViewModel : ViewModel() {
     val solidSavedColors: List<Color> = _savedColors
 
     // For solid color
-    private val _cardColor = MutableStateFlow<Color?>(null)
+    private val _cardColor = MutableStateFlow(Color.White)
     val cardColor: StateFlow<Color?> = _cardColor.asStateFlow()
+
+    //For text color
+    private val _textColor = MutableStateFlow(Color.Black)
+    val textColor: StateFlow<Color> = _textColor.asStateFlow()
 
     // For gradient
     private val _cardGradient = MutableStateFlow<GradientColor?>(null)
@@ -27,10 +31,11 @@ class SharedViewModel : ViewModel() {
     private val _isGradient = MutableStateFlow(false)
     val isGradient: StateFlow<Boolean> = _isGradient.asStateFlow()
 
-    // For WiFi details
+    // For network name details
     private val _networkName = MutableStateFlow("")
     val networkName: StateFlow<String> = _networkName.asStateFlow()
 
+    //For password name details
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
 
@@ -41,6 +46,10 @@ class SharedViewModel : ViewModel() {
     fun setCardColor(color: Color) {
         _cardColor.value = color
         _isGradient.value = false
+    }
+
+    fun setTextColor(color: Color) {
+        _textColor.value = color
     }
 
     fun setCardGradient(gradient: GradientColor) {

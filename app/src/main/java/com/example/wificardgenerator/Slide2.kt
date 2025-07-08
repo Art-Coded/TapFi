@@ -39,6 +39,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
     val currentCardColor by sharedViewModel.cardColor.collectAsState()
     val currentCardGradient by sharedViewModel.cardGradient.collectAsState()
     val isGradient by sharedViewModel.isGradient.collectAsState()
+    val currentTextColor by sharedViewModel.textColor.collectAsState()
 
     val scrollState = rememberScrollState()
 
@@ -163,13 +164,15 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                         verticalArrangement = Arrangement.Center
                     ) {
                         // Network Name Label
-                        Text(
-                            text = "Network Name (SSID)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.7f),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
+                        currentTextColor?.let {
+                            Text(
+                                text = "Network Name (SSID)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = it.copy(alpha = 0.7f),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
 
                         // Dynamic Network Name Text Size
                         val networkFontSize = when {
@@ -184,7 +187,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             text = networkName,
                             fontSize = networkFontSize,
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White,
+                            color = currentTextColor,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(horizontal = 8.dp),
@@ -197,7 +200,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             Text(
                                 text = "Password",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.7f),
+                                color = currentTextColor.copy(alpha = 0.7f),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
@@ -212,7 +215,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                                 text = password,
                                 fontSize = passwordFontSize,
                                 style = MaterialTheme.typography.titleMedium,
-                                color = Color.White.copy(alpha = 0.9f),
+                                color = currentTextColor.copy(alpha = 0.9f),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(horizontal = 8.dp),
                                 lineHeight = 13.sp
@@ -222,7 +225,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                             Text(
                                 text = "No password required, free Wifi!",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.White.copy(alpha = 0.9f),
+                                color = currentTextColor.copy(alpha = 0.9f),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(top = 8.dp),
                                 fontWeight = FontWeight.Bold
@@ -268,6 +271,8 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
                 val presetSolidColors = remember {
                     listOf(
+                        Color(0xFFFFFFFF), // White
+                        Color(0xFF000000), // Black
                         Color(0xFFF44336), // Red
                         Color(0xFFE91E63), // Pink
                         Color(0xFF9C27B0), // Purple
@@ -456,7 +461,38 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Default",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 2.dp, bottom = 2.dp, start = 12.dp)
+            )
+
+            Row {
+
+                val presetSolidColors = remember {
+                    listOf(
+                        Color(0xFFFFFFFF), // White
+                        Color(0xFF000000), // Black
+                        Color(0xFFF44336), // Red
+                        Color(0xFFE91E63), // Pink
+                        Color(0xFF9C27B0), // Purple
+                        Color(0xFF673AB7), // Deep Purple
+                        Color(0xFF3F51B5), // Indigo
+                        Color(0xFF2196F3), // Blue
+                        Color(0xFF00BCD4), // Cyan
+                        Color(0xFF4CAF50)  // Green
+                    )
+                }
+
+                HorizontalScrollableColors(
+                    colors = presetSolidColors,
+                    onColorSelected = { color ->
+                        sharedViewModel.setTextColor(color)
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
 
             HorizontalDivider()
 
