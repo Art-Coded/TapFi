@@ -1,6 +1,7 @@
 [versions]
 agp = "8.10.1"
 composeColorPickerBundle = "1.2.0"
+composeColorPickerBundleVersion = "<version>"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -14,6 +15,7 @@ navigationComposeAndroid = "2.9.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 compose-color-picker-bundle = { module = "com.github.SmartToolFactory:Compose-Color-Picker-Bundle", version.ref = "composeColorPickerBundle" }
+compose-color-picker-bundle-vversion = { module = "com.github.SmartToolFactory:Compose-Color-Picker-Bundle", version.ref = "composeColorPickerBundleVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
