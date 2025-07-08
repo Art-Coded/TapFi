@@ -580,3 +580,4 @@ private fun HorizontalScrollableGradients(
         Spacer(modifier = Modifier.width(4.dp))
     }
 }
+
