@@ -2,6 +2,7 @@ package com.example.wificardgenerator
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -286,6 +287,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
                 HorizontalScrollableColors(
                     colors = sharedViewModel.solidSavedColors + presetSolidColors,
+                    selectedColor = if (!isGradient) currentCardColor else null,
                     onColorSelected = { color ->
                         sharedViewModel.setCardColor(color)
                     }
@@ -408,6 +410,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
                 HorizontalScrollableGradients(
                     gradients = gradientColors,
+                    selectedGradient = if (isGradient) currentCardGradient else null,
                     onGradientSelected = { gradient ->
                         sharedViewModel.setCardGradient(gradient)
                     }
@@ -486,6 +489,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 
                 HorizontalScrollableColors(
                     colors = presetSolidColors,
+                    selectedColor = currentTextColor,
                     onColorSelected = { color ->
                         sharedViewModel.setTextColor(color)
                     }
@@ -506,6 +510,7 @@ fun SlideTwo(colorPickerClick: () -> Unit, sharedViewModel: SharedViewModel) {
 @Composable
 private fun HorizontalScrollableColors(
     colors: List<Color>,
+    selectedColor: Color?,
     onColorSelected: (Color) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -523,6 +528,12 @@ private fun HorizontalScrollableColors(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(MaterialTheme.shapes.small)
+                    // Add border if this is the selected color
+                    .border(
+                        width = if (color == selectedColor) 3.dp else 0.dp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                        shape = MaterialTheme.shapes.small
+                    )
                     .background(color)
                     .clickable { onColorSelected(color) }
             )
@@ -535,6 +546,7 @@ private fun HorizontalScrollableColors(
 @Composable
 private fun HorizontalScrollableGradients(
     gradients: List<GradientColor>,
+    selectedGradient: GradientColor?,
     onGradientSelected: (GradientColor) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -552,6 +564,11 @@ private fun HorizontalScrollableGradients(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(MaterialTheme.shapes.small)
+                    .border(
+                        width = if (gradient == selectedGradient) 3.dp else 0.dp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                        shape = MaterialTheme.shapes.small
+                    )
                     .background(
                         brush = Brush.horizontalGradient(
                             colors = listOf(gradient.start, gradient.end)
