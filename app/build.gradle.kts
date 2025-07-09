@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -66,6 +68,15 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.activity:activity-compose:1.9.0") // for permission handling
+
+
+    // Room
+    implementation ("androidx.room:room-runtime:2.7.2")
+    kapt ("androidx.room:room-compiler:2.7.2")
+
+    // Kotlin Coroutines support for Room
+    implementation ("androidx.room:room-ktx:2.7.2")
+
 
 
 }
