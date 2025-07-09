@@ -160,7 +160,7 @@ fun WifiScreen(
                     onBackClick = { navigateToSlide(0) },
                     onNextClick = { navigateToSlide(2) }
                 )
-                2 -> SlideThree()
+                2 -> SlideThree(sharedViewModel = sharedViewModel)
             }
         }
     }
