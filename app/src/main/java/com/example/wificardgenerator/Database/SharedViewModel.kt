@@ -52,6 +52,10 @@ class SharedViewModel : ViewModel() {
     private val _backgroundImage = MutableStateFlow<Bitmap?>(null)
     val backgroundImage: StateFlow<Bitmap?> = _backgroundImage.asStateFlow()
 
+    // For background image
+    private val _logoImage = MutableStateFlow<Bitmap?>(null)
+    val logoImage: StateFlow<Bitmap?> = _logoImage.asStateFlow()
+
     fun addColor(color: Color) {
         _savedColors.add(0, color)
     }
@@ -61,7 +65,6 @@ class SharedViewModel : ViewModel() {
             _cardColor.value = color
             _isGradient.value = false
             _backgroundType.value = BackgroundType.COLOR
-            // Clear background image when selecting color
             _backgroundImage.value = null
         }
     }
@@ -77,7 +80,6 @@ class SharedViewModel : ViewModel() {
             _cardGradient.value = gradient
             _isGradient.value = true
             _backgroundType.value = BackgroundType.GRADIENT
-            // Clear background image when selecting gradient
             _backgroundImage.value = null
         }
     }
@@ -98,19 +100,22 @@ class SharedViewModel : ViewModel() {
         viewModelScope.launch {
             _backgroundImage.value = bitmap
             _backgroundType.value = BackgroundType.IMAGE
-            // Clear color/gradient when selecting image
             _cardColor.value = null
             _cardGradient.value = null
             _isGradient.value = false
         }
     }
 
-    fun clearBackgroundImage() {
+    fun setLogoImage(bitmap: Bitmap) {
         viewModelScope.launch {
-            _backgroundImage.value = null
-            // Revert to color background when clearing image
-            _backgroundType.value = BackgroundType.COLOR
-            _cardColor.value = Color.White
+            _logoImage.value = bitmap
         }
     }
+
+    fun clearLogoImage() {
+        viewModelScope.launch {
+            _logoImage.value = null
+        }
+    }
+
 }

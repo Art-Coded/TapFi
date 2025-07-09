@@ -1,20 +1,18 @@
 package com.example.wificardgenerator
 
-import android.graphics.Bitmap
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -33,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wificardgenerator.Database.SharedViewModel
+import com.example.wificardgenerator.components.HorizontalScrollableColors
+import com.example.wificardgenerator.components.HorizontalScrollableGradients
 
 data class GradientColor(
     val start: Color,
@@ -64,6 +64,7 @@ fun SlideTwo(
 
     val context = LocalContext.current
     val backgroundImage by sharedViewModel.backgroundImage.collectAsState()
+    val logoImage by sharedViewModel.logoImage.collectAsState()
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -71,6 +72,16 @@ fun SlideTwo(
             uri?.let {
                 val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
                 sharedViewModel.setBackgroundImage(bitmap)
+            }
+        }
+    )
+
+    val logoLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            uri?.let {
+                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+                sharedViewModel.setLogoImage(bitmap)
             }
         }
     )
@@ -132,7 +143,6 @@ fun SlideTwo(
                     .clip(MaterialTheme.shapes.medium),
                 contentAlignment = Alignment.Center
             ) {
-                // Background layer
                 if (backgroundImage != null) {
                     Image(
                         bitmap = backgroundImage!!.asImageBitmap(),
@@ -167,7 +177,6 @@ fun SlideTwo(
                     )
                 }
 
-                // Content layer (your existing QR code and network info)
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -202,6 +211,24 @@ fun SlideTwo(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
+
+                        if (logoImage != null) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 8.dp),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                Image(
+                                    bitmap = logoImage!!.asImageBitmap(),
+                                    contentDescription = "Logo Image",
+                                    modifier = Modifier.size(50.dp),
+                                    contentScale = ContentScale.Fit
+                                )
+                            }
+                        }
+
+
                         // Network Name Label
                         currentTextColor?.let {
                             Text(
@@ -233,7 +260,7 @@ fun SlideTwo(
                             lineHeight = 16.sp
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
                         if (password.isNotBlank()) {
                             Text(
@@ -266,8 +293,10 @@ fun SlideTwo(
                                 color = currentTextColor.copy(alpha = 0.9f),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(top = 8.dp),
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 10.sp
                             )
+
                         }
                     }
                 }
@@ -540,83 +569,86 @@ fun SlideTwo(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-        }
+            Row(
+                modifier = Modifier.padding(bottom = 12.dp)
+            ) {
+                Text(
+                    text = "Add a Logo",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
 
-    }
-}
+                Text(
+                    text = "(Optional)",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
 
-@Composable
-private fun HorizontalScrollableColors(
-    colors: List<Color>,
-    selectedColor: Color?,
-    onColorSelected: (Color) -> Unit
-) {
-    val scrollState = rememberScrollState()
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(scrollState),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Spacer(modifier = Modifier.width(4.dp))
-
-        colors.forEach { color ->
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    // Add border if this is the selected color
-                    .border(
-                        width = if (color == selectedColor) 3.dp else 0.dp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .background(color)
-                    .clickable { onColorSelected(color) }
-            )
-        }
-
-        Spacer(modifier = Modifier.width(4.dp))
-    }
-}
-
-@Composable
-private fun HorizontalScrollableGradients(
-    gradients: List<GradientColor>,
-    selectedGradient: GradientColor?,
-    onGradientSelected: (GradientColor) -> Unit
-) {
-    val scrollState = rememberScrollState()
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(scrollState),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Spacer(modifier = Modifier.width(4.dp))
-
-        gradients.forEach { gradient ->
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    .border(
-                        width = if (gradient == selectedGradient) 3.dp else 0.dp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(gradient.start, gradient.end)
+            if (logoImage == null) {
+                // Show Open Gallery button
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .height(48.dp)
+                        .clip(CircleShape)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                         )
+                        .clickable {
+                            logoLauncher.launch("image/*")
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Open gallery",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Medium
                     )
-                    .clickable { onGradientSelected(gradient) }
-            )
-        }
+                }
+            } else {
+                // Show Remove Logo button
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .height(48.dp)
+                        .clip(CircleShape)
+                        .background(
+                            color = MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
+                        )
+                        .clickable {
+                            sharedViewModel.clearLogoImage()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Remove logo",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Medium
+                        )
 
-        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_delete),
+                            contentDescription = "Delete icon",
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 
