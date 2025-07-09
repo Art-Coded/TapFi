@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -43,7 +45,9 @@ data class GradientColor(
 @Composable
 fun SlideTwo(
     colorPickerClick: () -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit
 ) {
 
     val currentCardColor by sharedViewModel.cardColor.collectAsState()
@@ -644,11 +648,53 @@ fun SlideTwo(
                         )
                     }
                 }
-
             }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                onClick = {
+                    onBackClick()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp)
+            ) {
+                Text(text = "Back")
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Button(
+                onClick = {
+                    onNextClick()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(48.dp)
+            ) {
+                Text(text = "Next")
+            }
+        }
+
+
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
-
