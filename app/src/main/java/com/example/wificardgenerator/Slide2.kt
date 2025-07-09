@@ -490,7 +490,7 @@ fun SlideTwo(
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
-                    contentColor = Color.White
+                    contentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 modifier = Modifier
                     .weight(1f)

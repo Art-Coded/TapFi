@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wificardgenerator.Database.SharedViewModel
@@ -119,20 +120,17 @@ fun WifiCardPreview(sharedViewModel: SharedViewModel) {
                 verticalArrangement = Arrangement.Center
             ) {
                 if (logoImage != null) {
-                    Row(
+                    Image(
+                        bitmap = logoImage!!.asImageBitmap(),
+                        contentDescription = "Logo Image",
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 8.dp),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Image(
-                            bitmap = logoImage!!.asImageBitmap(),
-                            contentDescription = "Logo Image",
-                            modifier = Modifier.size(50.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
+                            .size(50.dp)
+                            .align(Alignment.CenterHorizontally),
+                        contentScale = ContentScale.Fit
+                    )
                 }
+
+                Spacer(modifier = Modifier.height(14.dp))
 
                 currentTextColor?.let {
                     Text(
@@ -157,7 +155,8 @@ fun WifiCardPreview(sharedViewModel: SharedViewModel) {
                     style = MaterialTheme.typography.headlineMedium,
                     color = currentTextColor,
                     modifier = Modifier.padding(horizontal = 8.dp),
-                    lineHeight = 16.sp
+                    lineHeight = 16.sp,
+                    textAlign = TextAlign.Center
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -182,15 +181,19 @@ fun WifiCardPreview(sharedViewModel: SharedViewModel) {
                         style = MaterialTheme.typography.titleMedium,
                         color = currentTextColor.copy(alpha = 0.9f),
                         modifier = Modifier.padding(horizontal = 8.dp),
-                        lineHeight = 13.sp
+                        lineHeight = 13.sp,
+                        textAlign = TextAlign.Center
                     )
                 } else {
                     Text(
                         text = "No password required, free Wifi!",
                         style = MaterialTheme.typography.bodyMedium,
                         color = currentTextColor.copy(alpha = 0.9f),
-                        modifier = Modifier.padding(top = 8.dp),
-                        fontSize = 10.sp
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth(),
+                        fontSize = 10.sp,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
