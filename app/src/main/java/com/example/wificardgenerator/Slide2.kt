@@ -489,7 +489,7 @@ fun SlideTwo(
                     onBackClick()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                     contentColor = Color.White
                 ),
                 modifier = Modifier
