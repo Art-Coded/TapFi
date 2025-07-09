@@ -30,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.wificardgenerator.Database.AppPreferences
 import com.example.wificardgenerator.Database.SharedViewModel
+import com.example.wificardgenerator.Database.SharedViewModelFactory
 import com.example.wificardgenerator.ui.theme.WifiCardGeneratorTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
         val preferences = AppPreferences(this)
         val initialDarkTheme = preferences.getDarkTheme()
+
 
         setContent {
             var isDarkTheme by remember { mutableStateOf(initialDarkTheme) }
@@ -58,7 +60,13 @@ class MainActivity : ComponentActivity() {
                 darkTheme = isDarkTheme,
                 dynamicColor = false
             ) {
-                val sharedViewModel: SharedViewModel = viewModel()
+                val context = this
+                val db = com.example.wificardgenerator.Database.AppDatabase.getDatabase(context)
+                val dao = db.savedColorDao()
+                val sharedViewModel: SharedViewModel = viewModel(
+                    factory = SharedViewModelFactory(dao)
+                )
+
                 val navController = rememberNavController()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

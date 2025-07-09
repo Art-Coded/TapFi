@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wificardgenerator.BackgroundType
@@ -15,10 +16,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SharedViewModel : ViewModel() {
+class SharedViewModel(private val dao: SavedColorDao) : ViewModel() {
 
     private val _savedColors = mutableStateListOf<Color>()
     val solidSavedColors: List<Color> = _savedColors
+
+    init {
+        viewModelScope.launch {
+            dao.getAllColors().collect { entities ->
+                _savedColors.clear()
+                _savedColors.addAll(entities.map {
+                    // Convert hex string to Color
+                    Color(android.graphics.Color.parseColor(it.colorHex))
+                })
+            }
+        }
+    }
+
 
     // For solid color
     private val _cardColor = MutableStateFlow<Color?>(Color.White)
@@ -57,7 +71,10 @@ class SharedViewModel : ViewModel() {
     val logoImage: StateFlow<Bitmap?> = _logoImage.asStateFlow()
 
     fun addColor(color: Color) {
-        _savedColors.add(0, color)
+        viewModelScope.launch {
+            val colorHex = String.format("#%08X", color.toArgb())
+            dao.insertColor(SavedColorEntity(colorHex = colorHex))
+        }
     }
 
     fun setCardColor(color: Color) {
