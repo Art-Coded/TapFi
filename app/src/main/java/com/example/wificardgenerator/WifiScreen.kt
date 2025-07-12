@@ -1,5 +1,8 @@
 package com.example.wificardgenerator
 
+import android.os.Build
+import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
@@ -32,21 +35,39 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ColorFilter
 import com.example.wificardgenerator.Database.SharedViewModel
 import com.example.wificardgenerator.ui.theme.dark_mode
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun WifiScreen(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     onToggleTheme: (Boolean) -> Unit = {},
     colorPickerClick: () -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    onBackPressed: () -> Unit
 ) {
     val pageCount = 3
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { pageCount })
+    val coroutineScope = rememberCoroutineScope()
+
+    BackHandler {
+        if (pagerState.currentPage > 0) {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+            }
+        } else {
+            onBackPressed()
+        }
+    }
 
     val icons = listOf(
         R.drawable.ic_wifi3,
@@ -54,7 +75,7 @@ fun WifiScreen(
         R.drawable.ic_preview
     )
 
-    val coroutineScope = rememberCoroutineScope()
+
     fun navigateToSlide(index: Int) {
         coroutineScope.launch {
             pagerState.animateScrollToPage(
@@ -65,6 +86,7 @@ fun WifiScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+
         val currentPage = pagerState.currentPage
 
         AnimatedContent(

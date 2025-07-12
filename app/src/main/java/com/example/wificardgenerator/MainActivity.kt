@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -34,6 +35,7 @@ import com.example.wificardgenerator.Database.SharedViewModelFactory
 import com.example.wificardgenerator.ui.theme.WifiCardGeneratorTheme
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -85,7 +87,8 @@ class MainActivity : ComponentActivity() {
                                     preferences.saveDarkTheme(newValue)
                                 },
                                 colorPickerClick = { navController.navigate("colorpicker") },
-                                sharedViewModel = sharedViewModel
+                                sharedViewModel = sharedViewModel,
+                                onBackPressed = { finish() }
                             )
                         }
 
