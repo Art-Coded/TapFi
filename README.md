@@ -3,6 +3,6 @@
 |--------------|--------------|
 | ![](app/images/slide1_light.png) | ![](app/images/slide1_dark.png) |
 
-| Card Color Picker |
+| Slide 2 | Card Color Picker | Card Image customization |
 |--------------|--------------|--------------|
 | ![](app/images/slide2.png) | ![](app/images/slide2colors.png) | ![](app/images/slide2img.png) |
